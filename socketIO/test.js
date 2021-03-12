@@ -1,19 +1,19 @@
 module.exports = function (server) {
   const io = require('socket.io')(server)
 
-  // 监视客户端与服务器的连接
+  // Monitor the connection between the client and the server
   io.on('connection', function (socket) {
-    console.log('有一个客户端连接上了服务器')
+    console.log('A client connected to the server')
 
-    // 绑定监听, 接收客户端发送的消息
+    // Binding listener, receive messages sent by the client
     socket.on('sendMsg', function (data) {
-      console.log('服务器接收到客户端发送的消息', data)
-      // 处理数据
+      console.log('The server receives the message sent by the client', data)
+      // Data processing
       data.name = data.name.toUpperCase()
-      // 服务器向客户端发送消息
+      // The server sends a message to the client
       // socket.emit('receiveMsg', data)
       io.emit('receiveMsg', data)
-      console.log('服务器向客户端发送消息', data)
+      console.log('The server sends a message to the client', data)
     })
   })
 }
