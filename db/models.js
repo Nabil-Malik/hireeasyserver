@@ -27,6 +27,22 @@ const UserModel = mongoose.model('user', userSchema)
 // Export Model
 exports.UserModel = UserModel
 
+// Define the job collection
+const jobSchema=mongoose.Schema({
+  jobTitle:{type:String,require:true},
+  jobType:{type:String,require:true},
+  content:{type:String,require:true},
+  company:{type:String,require:true},
+  position:{type:String,require:true},
+  applicantId:{type:Array},
+  posterId:{type:String,require:true},
+  postDate:{type:Date},
+  expire:{type:String}
+})
+
+const JobModel=mongoose.model('job',jobSchema);
+
+exports.JobModel=JobModel;
 
 // Define the chat collection
 const chatSchema = mongoose.Schema({

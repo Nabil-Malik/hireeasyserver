@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const md5 = require('blueimp-md5')
-const {UserModel, ChatModel} = require('../db/models')
+const {UserModel, ChatModel,JobModel} = require('../db/models')
 const filter = {password: 0, __v: 0} // Specify the properties of the filter
 
 /* GET home page. */
@@ -109,6 +109,30 @@ router.get('/userlist', function (req, res) {
   })
 })
 
+// Create job route
+router.post('/createJob', function (req, res) { 
+  // Read request parameter data
+  const {jobTitle, jobType, content,company,position,posterId,postDate,expire} = req.body
+  
+      new JobModel({jobTitle, jobType,content,company,position,posterId,postDate,expire}).save(function (error, job) {              
+        res.send({code: 0, job})
+      })
+  // Return response data
+})
+
+
+// Get job list (according to type)
+router.get('/joblist', function (req, res) {
+   // Get the userid from the requested cookie
+   const {userid} = req.query
+   //const userid = req.cookies.userid
+   // If it does not exist, directly return a prompt message  
+  JobModel.find({userid}, function (error, jobs) {
+        res.send({code: 0, data: jobs})
+      })  
+})
+
+
 /*
 Get a list of all related chat information of the current user
  */
@@ -127,12 +151,7 @@ router.get('/msglist', function (req, res) {
       users[user._id] = {username: user.username, header: user.header}
       return users
     } , {})
-    /*
-    Query all chat information related to userid
-     Parameter 1: Query conditions
-     Parameter 2: Filter conditions
-     Parameter 3: callback function
-    */
+   
     ChatModel.find({'$or': [{from: userid}, {to: userid}]}, filter, function (err, chatMsgs) {
       // Return data containing all chat messages related to all users and the current user
       res.send({code: 0, data: {users, chatMsgs}})
@@ -147,13 +166,7 @@ router.post('/readmsg', function (req, res) {
   //Get the from and to in the request
   const from = req.body.from
   const to = req.cookies.userid
-  /*
-Update chat data in the database
-  Parameter 1: Query conditions
-  Parameter 2: Update to the specified data object
-  Parameter 3: Whether to update multiple items at a time, only one item is updated by default
-  Parameter 4: callback function for update completion
-   */
+
   ChatModel.update({from, to, read: false}, {read: true}, {multi: true}, function (err, doc) {
     console.log('/readmsg', doc)
     res.send({code: 0, data: doc.nModified}) // Number of updates
