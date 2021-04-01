@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
   post: {type: String}, // position
   info: {type: String}, // personal info
   company: {type: String}, // company
-  salary: {type: String} // salary
+  salary: {type: String},// salary
+  isBlock:{type:Boolean,default:false} 
 })
 // Define Model
 const UserModel = mongoose.model('user', userSchema) 
@@ -33,11 +34,11 @@ const jobSchema=mongoose.Schema({
   jobType:{type:String,require:true},
   content:{type:String,require:true},
   company:{type:String,require:true},
-  position:{type:String,require:true},
-  applicantId:{type:Array},
-  posterId:{type:String,require:true},
+  position:{type:String,require:true},  
+  posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
-  expire:{type:String}
+  expire:{type:String},
+  applicant:{type:mongoose.Schema.ObjectId,ref:'user'}
 })
 
 const JobModel=mongoose.model('job',jobSchema);

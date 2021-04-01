@@ -112,22 +112,68 @@ router.get('/userlist', function (req, res) {
 // Create job route
 router.post('/createJob', function (req, res) { 
   // Read request parameter data
-  const {jobTitle, jobType, content,company,position,posterId,postDate,expire} = req.body
-  
-      new JobModel({jobTitle, jobType,content,company,position,posterId,postDate,expire}).save(function (error, job) {              
+  const {jobTitle, jobType, content,company,position,expire} = req.body
+  const posterId = req.cookies.userid
+      new JobModel({jobTitle, jobType, content,company,position,posterId,expire}).save(function (error, job) {              
         res.send({code: 0, job})
       })
   // Return response data
+})
+
+let jobId
+router.post('/jobDetail', function (req, res) { 
+   jobId=req.body.jobId;
+  console.log("jobId "+jobId);
+  JobModel.findOne({_id: jobId},function (error, job) {
+    if(job) {
+      //console.log(job)
+      //jobID=job._id;
+      res.send({code: 0, data: job})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 1, msg: 'Job not exist'})
+    }
+  })
+})
+router.post('/updateJob', function (req, res) {
+  console.log("========="); 
+  console.log(jobId);
+  console.log(req.body);
+  console.log("========="); 
+  JobModel.findByIdAndUpdate({_id: jobId},req.body,function (error, oldJob) {
+    if(!oldJob) {
+      res.send({code: 1, msg: 'Job not exist'})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 0, data: 'Job has been updated'})
+    }
+  })
+})
+
+router.post('/deleteJob', function (req, res) {
+  console.log("========="); 
+  console.log(jobId);
+  //console.log(req.body);
+  console.log("========="); 
+  JobModel.findByIdAndRemove({_id: jobId},function (error, job) {
+    if(!job) {
+      res.send({code: 1, msg: 'Job not exist'})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 0, data: 'Job has been deleted'})
+    }
+  })
 })
 
 
 // Get job list (according to type)
 router.get('/joblist', function (req, res) {
    // Get the userid from the requested cookie
-   const {userid} = req.query
-   //const userid = req.cookies.userid
+  //  const {userid} = req.query
+   const posterId= req.cookies.userid
+   console.log("userId: " +posterId);
    // If it does not exist, directly return a prompt message  
-  JobModel.find({userid}, function (error, jobs) {
+  JobModel.find({posterId}, function (error, jobs) {
         res.send({code: 0, data: jobs})
       })  
 })
