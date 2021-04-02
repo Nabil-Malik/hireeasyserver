@@ -250,4 +250,11 @@ router.post('/readmsg', function (req, res) {
   })
 })
 
+router.get('/applyHistory',function(req,res){
+  const userId=req.cookies.userid
+  JobModel.find({applicant:userId},function(err,jobs){
+    res.send({code:0,data:jobs})
+  })
+})
+
 module.exports = router;
