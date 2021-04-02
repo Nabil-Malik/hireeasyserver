@@ -20,7 +20,9 @@ const userSchema = mongoose.Schema({
   post: {type: String}, // position
   info: {type: String}, // personal info
   company: {type: String}, // company
+  careerObjective:{type:String},
   salary: {type: String},// salary
+  appliedJob:{type:Array},
   isBlock:{type:Boolean,default:false} 
 })
 // Define Model
@@ -38,7 +40,7 @@ const jobSchema=mongoose.Schema({
   posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
   expire:{type:String},
-  applicant:{type:mongoose.Schema.ObjectId,ref:'user'}
+  applicant:{type:Array}
 })
 
 const JobModel=mongoose.model('job',jobSchema);

@@ -165,11 +165,15 @@ router.post('/deleteJob', function (req, res) {
   })
 })
 
+// Get job list 
+router.get('/getJobs', function (req, res) {
+ JobModel.find( function (error, jobs) {
+       res.send({code: 0, data: jobs})
+     })  
+})
 
 // Get job list (according to type)
-router.get('/joblist', function (req, res) {
-   // Get the userid from the requested cookie
-  //  const {userid} = req.query
+router.get('/joblist', function (req, res) {  
    const posterId= req.cookies.userid
    console.log("userId: " +posterId);
    // If it does not exist, directly return a prompt message  
@@ -178,7 +182,34 @@ router.get('/joblist', function (req, res) {
       })  
 })
 
+// Get job list (according to type)
+router.post('/getJobPoster', function (req, res) {
+  const posterId=req.body.posterId;
+  console.log("posterId: " +posterId);
+  console.log("req.body: " +req.body);  
+  // If it does not exist, directly return a prompt message  
+  UserModel.find({_id:posterId}, function (error, users) {        
+        // console.log(users.length);
+        // for(var i=0;i<users.length;i++){
+        //   console.log(users[i]);
+        // }
+        res.send({code: 0, data: users})
+      })  
+})
 
+router.get('/viewCandidates',function(req,res){
+  const {jobId} = req.query
+  console.log(jobId);
+  UserModel.find({appliedJob:jobId},function(err,users){    
+    if(users){
+      console.log(users.length)
+      res.send({code:0,data:users})
+    }
+    else{
+      res.send('not found')
+    }
+  })
+})
 /*
 Get a list of all related chat information of the current user
  */
