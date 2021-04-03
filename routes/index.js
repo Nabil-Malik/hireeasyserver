@@ -88,6 +88,7 @@ router.get('/user', function (req, res) {
   if(!userid) {
     return res.send({code: 1, msg: 'Please login first'})
   }
+  
   // Query the corresponding user according to userid
   UserModel.findOne({_id: userid}, filter, function (error, user) {
     if(user) {
@@ -120,19 +121,96 @@ router.post('/createJob', function (req, res) {
   // Return response data
 })
 
+let jobId
+router.post('/jobDetail', function (req, res) { 
+   jobId=req.body.jobId;
+  console.log("jobId "+jobId);
+  JobModel.findOne({_id: jobId},function (error, job) {
+    if(job) {
+      //console.log(job)
+      //jobID=job._id;
+      res.send({code: 0, data: job})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 1, msg: 'Job not exist'})
+    }
+  })
+})
+router.post('/updateJob', function (req, res) {
+  console.log("========="); 
+  console.log(jobId);
+  console.log(req.body);
+  console.log("========="); 
+  JobModel.findByIdAndUpdate({_id: jobId},req.body,function (error, oldJob) {
+    if(!oldJob) {
+      res.send({code: 1, msg: 'Job not exist'})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 0, data: 'Job has been updated'})
+    }
+  })
+})
+
+router.post('/deleteJob', function (req, res) {
+  console.log("========="); 
+  console.log(jobId);
+  //console.log(req.body);
+  console.log("========="); 
+  JobModel.findByIdAndRemove({_id: jobId},function (error, job) {
+    if(!job) {
+      res.send({code: 1, msg: 'Job not exist'})
+    } else {
+      // Notify browser to delete userid cookie
+      res.send({code: 0, data: 'Job has been deleted'})
+    }
+  })
+})
+
+// Get job list 
+router.get('/getJobs', function (req, res) {
+ JobModel.find( function (error, jobs) {
+       res.send({code: 0, data: jobs})
+     })  
+})
 
 // Get job list (according to type)
-router.get('/joblist', function (req, res) {
-   // Get the userid from the requested cookie
-   const {userid} = req.query
-   //const userid = req.cookies.userid
+router.get('/joblist', function (req, res) {  
+   const posterId= req.cookies.userid
+   console.log("userId: " +posterId);
    // If it does not exist, directly return a prompt message  
-  JobModel.find({userid}, function (error, jobs) {
+  JobModel.find({posterId}, function (error, jobs) {
         res.send({code: 0, data: jobs})
       })  
 })
 
+// Get job list (according to type)
+router.post('/getJobPoster', function (req, res) {
+  const posterId=req.body.posterId;
+  console.log("posterId: " +posterId);
+  console.log("req.body: " +req.body);  
+  // If it does not exist, directly return a prompt message  
+  UserModel.find({_id:posterId}, function (error, users) {        
+        // console.log(users.length);
+        // for(var i=0;i<users.length;i++){
+        //   console.log(users[i]);
+        // }
+        res.send({code: 0, data: users})
+      })  
+})
 
+router.get('/viewCandidates',function(req,res){
+  const {jobId} = req.query
+  console.log(jobId);
+  UserModel.find({appliedJob:jobId},function(err,users){    
+    if(users){
+      console.log(users.length)
+      res.send({code:0,data:users})
+    }
+    else{
+      res.send('not found')
+    }
+  })
+})
 /*
 Get a list of all related chat information of the current user
  */
@@ -170,6 +248,13 @@ router.post('/readmsg', function (req, res) {
   ChatModel.update({from, to, read: false}, {read: true}, {multi: true}, function (err, doc) {
     console.log('/readmsg', doc)
     res.send({code: 0, data: doc.nModified}) // Number of updates
+  })
+})
+
+router.get('/applyHistory',function(req,res){
+  const userId=req.cookies.userid
+  JobModel.find({applicant:userId},function(err,jobs){
+    res.send({code:0,data:jobs})
   })
 })
 

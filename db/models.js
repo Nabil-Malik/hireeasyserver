@@ -4,14 +4,20 @@ Contains some Model modules that manipulate database collection data
 
 /*Connect to the database*/
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/hireeasy_db')
+
+//connect to local mongodb
+mongoose.connect('mongodb://localhost:27017/hireeasy_db') 
+
+// if connect to cloud mongodb
+// mongoose.connect('##########')    //need to update the cloud mongodb endpoint
+
 const conn = mongoose.connection
 conn.on('connected', () => {
   console.log('db connect success!')
 })
 
 
-//User Schema
+///User Schema
 const userSchema = mongoose.Schema({
   username: {type: String, required: true}, // UserName
   password: {type: String, required: true}, // Password
@@ -20,7 +26,10 @@ const userSchema = mongoose.Schema({
   post: {type: String}, // position
   info: {type: String}, // personal info
   company: {type: String}, // company
-  salary: {type: String} // salary
+  careerObjective:{type:String},
+  salary: {type: String},// salary         
+  appliedJob:{type:Array},
+  isBlock:{type:Boolean,default:false} 
 })
 // Define Model
 const UserModel = mongoose.model('user', userSchema) 
@@ -36,13 +45,13 @@ const jobSchema=mongoose.Schema({
   position:{type:String,require:true},
   postCode:{type:String},  
   applicantId:{type:Array},
-  posterId:{type:String, require:true},
+  posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
-  expire:{type:String}
+  expire:{type:String},
+  applicant:{type:Array}
 })
 
 const JobModel=mongoose.model('job',jobSchema);
-
 exports.JobModel=JobModel;
 
 // Define the chat collection
