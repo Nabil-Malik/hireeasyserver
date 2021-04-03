@@ -112,9 +112,9 @@ router.get('/userlist', function (req, res) {
 // Create job route
 router.post('/createJob', function (req, res) { 
   // Read request parameter data
-  const {jobTitle, jobType, content,company,position,posterId,postDate,expire} = req.body
+  const {jobTitle, jobType, content,company,position, postCode, posterId,postDate,expire} = req.body
   
-      new JobModel({jobTitle, jobType,content,company,position,posterId,postDate,expire}).save(function (error, job) {              
+      new JobModel({jobTitle, jobType,content,company,position,posterId,postCode,postDate,expire}).save(function (error, job) {              
         res.send({code: 0, job})
       })
   // Return response data
