@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
   careerObjective:{type:String},
   salary: {type: String},// salary
   appliedJob:{type:Array},
-  isBlock:{type:Boolean,default:false} 
+  isBlock:{type:Boolean} 
 })
 // Define Model
 const UserModel = mongoose.model('user', userSchema) 
@@ -60,3 +60,14 @@ const chatSchema = mongoose.Schema({
 const ChatModel = mongoose.model('chat', chatSchema) 
 //Export  Model
 exports.ChatModel = ChatModel
+
+//Define the report collection
+const reportSchema=mongoose.Schema({
+  reportTitle:{type:String},
+  reportedUserName:{type:String},
+  reportDate:{type:Date},
+  reportReason:{type:String}
+})
+const ReportModel=mongoose.model('report',reportSchema)
+//Export Model
+exports.ReportModel=ReportModel
