@@ -7,7 +7,11 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/hireeasy_db')
 const conn = mongoose.connection
 conn.on('connected', () => {
-  console.log('db connect success!')
+  
+  //if connect to local mongo db
+  console.log('db connect success to local mongodb!');
+  //if connect to cloud mongo db
+  // console.log('db connect success to cloud mongodb!')
 })
 
 
@@ -37,6 +41,7 @@ const jobSchema=mongoose.Schema({
   content:{type:String,require:true},
   company:{type:String,require:true},
   position:{type:String,require:true},  
+  postCode:{type:String},  
   posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
   expire:{type:String},

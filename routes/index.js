@@ -7,7 +7,7 @@ const filter = {password: 0, __v: 0} // Specify the properties of the filter
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: ' Hire Easy Express Server' });    
 });
 
 // Registered route
@@ -122,12 +122,23 @@ router.get('/userlist', function (req, res) {
 
 // Create job route
 router.post('/createJob', function (req, res) { 
+  console.log("==== createJob ===");
+  console.log(req.body);
   // Read request parameter data
-  const {jobTitle, jobType, content,company,position, postCode, posterId,postDate,expire} = req.body
+  const {jobTitle, jobType, content, company, position, postCode, postDate, expire} = req.body;
+  const posterId= req.cookies.userid; // overwride posterId from requst header
+  console.log("the posterId will be override to the correct value " + posterId);
+  console.log(jobTitle + " has been created");
   
-      new JobModel({jobTitle, jobType,content,company,position,posterId,postCode,postDate,expire}).save(function (error, job) {              
-        res.send({code: 0, job})
-      })
+  new JobModel({jobTitle, jobType, content, company, position, postCode, posterId, postDate, expire}).save(function (error, job) {  
+    if(!error){
+      console.log( " Failed to save in Database:" + error );
+      res.send({code: 500,  job });
+      return;
+    }            
+    res.send({code: 0, job })
+    console.log(jobTitle + " has been saved in database");
+  })
   // Return response data
 })
 
@@ -145,8 +156,7 @@ router.post('/jobDetail', function (req, res) {
   })
 })
 router.post('/updateJob', function (req, res) {
-  console.log("========="); 
-  console.log(jobId);
+  console.log("==== updateJob ===");
   console.log(req.body);
   console.log("========="); 
   JobModel.findByIdAndUpdate({_id: jobId},req.body,function (error, oldJob) {
@@ -179,7 +189,7 @@ router.get('/getJobs', function (req, res) {
 
 // Get job list (according to type)
 router.get('/joblist', function (req, res) {  
-   const posterId= req.cookies.userid
+   const posterId= req.cookies.userid;
    console.log("userId: " +posterId);
    // If it does not exist, directly return a prompt message  
   JobModel.find({posterId}, function (error, jobs) {
