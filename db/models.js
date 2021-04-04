@@ -71,3 +71,4 @@ const reportSchema=mongoose.Schema({
 const ReportModel=mongoose.model('report',reportSchema)
 //Export Model
 exports.ReportModel=ReportModel
+

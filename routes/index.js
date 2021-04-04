@@ -98,6 +98,7 @@ router.get('/user', function (req, res) {
   if(!userid) {
     return res.send({code: 1, msg: 'Please login first'})
   }
+  
   // Query the corresponding user according to userid
   UserModel.findOne({_id: userid}, filter, function (error, user) {
     if(user) {
@@ -122,9 +123,9 @@ router.get('/userlist', function (req, res) {
 // Create job route
 router.post('/createJob', function (req, res) { 
   // Read request parameter data
-  const {jobTitle, jobType, content,company,position,expire} = req.body
-  const posterId = req.cookies.userid
-      new JobModel({jobTitle, jobType, content,company,position,posterId,expire}).save(function (error, job) {              
+  const {jobTitle, jobType, content,company,position, postCode, posterId,postDate,expire} = req.body
+  
+      new JobModel({jobTitle, jobType,content,company,position,posterId,postCode,postDate,expire}).save(function (error, job) {              
         res.send({code: 0, job})
       })
   // Return response data
