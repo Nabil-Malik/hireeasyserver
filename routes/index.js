@@ -7,7 +7,7 @@ const filter = {password: 0, __v: 0} // Specify the properties of the filter
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: ' Hire Easy Express Server' });    
 });
 
 // Registered route
@@ -45,9 +45,9 @@ router.post('/login', function (req, res) {
       // Generate a cookie (userid: user._id), and give it to the browser to save
       res.cookie('userid', user._id, {maxAge: 1000*60*60*24})
       // Return login success information (including user)
-      res.send({code: 0, data: user})
+      res.send({code: 0, data: 'Welcome ' + user})
     } else {//failed to login
-      res.send({code: 1, msg: 'Incorrect username or password!'})
+      res.send({code: 1, msg:'Incorrect username or password!'})
     }
   })
 })
@@ -112,11 +112,18 @@ router.get('/userlist', function (req, res) {
 // Create job route
 router.post('/createJob', function (req, res) { 
   // Read request parameter data
-  const {jobTitle, jobType, content,company,position, postCode, posterId,postDate,expire} = req.body
+  const {jobTitle, jobType, content, company, position, postCode, posterId, postDate, expire} = req.body;
+  console.log(jobTitle + " has been created");
   
-      new JobModel({jobTitle, jobType,content,company,position,posterId,postCode,postDate,expire}).save(function (error, job) {              
-        res.send({code: 0, job})
-      })
+  new JobModel({jobTitle, jobType, content, company, position, postCode, posterId, postDate, expire}).save(function (error, job) {  
+    if(!error){
+      console.log( " Failed to save in Database:" + error );
+      res.send({code: 500,  job });
+      return;
+    }            
+    res.send({code: 0, job })
+    console.log(jobTitle + " has been saved in database");
+  })
   // Return response data
 })
 

@@ -1,26 +1,26 @@
 # HireEasyServer
 #1 Register as a new user:
-	url: localhost:3005/register
+	url: localhost:4000/register
 	request: POST
 	
 #2 Login:
-	url: localhost:3005/register
+	url: localhost:4000/register
 	request: POST
 
 #3 Update User Information
-	url: localhost:3005/update
+	url: localhost:4000/update
 	request: POST
 	
 #4 Read Current User Information
-    url: localhost:3005/user
+    url: localhost:4000/user
 	request: GET
 	
 #5 Read Current User Information
-    url: localhost:3005/userlist
+    url: localhost:4000/userlist
 	request: GET
 	
 #6 Read Current User Information
-    url: localhost:3005/msglist
+    url: localhost:4000/msglist
 	request: GET
 
 

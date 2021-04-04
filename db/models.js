@@ -7,7 +7,11 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/hireeasy_db')
 const conn = mongoose.connection
 conn.on('connected', () => {
-  console.log('db connect success!')
+  
+  //if connect to local mongo db
+  console.log('db connect success to local mongodb!');
+  //if connect to cloud mongo db
+  // console.log('db connect success to cloud mongodb!')
 })
 
 
