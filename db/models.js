@@ -24,7 +24,10 @@ const userSchema = mongoose.Schema({
   post: {type: String}, // position
   info: {type: String}, // personal info
   company: {type: String}, // company
-  salary: {type: String} // salary
+  careerObjective:{type:String},
+  salary: {type: String},// salary
+  appliedJob:{type:Array},
+  isBlock:{type:Boolean} 
 })
 // Define Model
 const UserModel = mongoose.model('user', userSchema) 
@@ -37,12 +40,11 @@ const jobSchema=mongoose.Schema({
   jobType:{type:String,require:true},
   content:{type:String,require:true},
   company:{type:String,require:true},
-  position:{type:String,require:true},
-  postCode:{type:String},  
-  applicantId:{type:Array},
-  posterId:{type:String, require:true},
+  position:{type:String,require:true},  
+  posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
-  expire:{type:String}
+  expire:{type:String},
+  applicant:{type:Array}
 })
 
 const JobModel=mongoose.model('job',jobSchema);
@@ -62,3 +64,15 @@ const chatSchema = mongoose.Schema({
 const ChatModel = mongoose.model('chat', chatSchema) 
 //Export  Model
 exports.ChatModel = ChatModel
+
+//Define the report collection
+const reportSchema=mongoose.Schema({
+  reportTitle:{type:String},
+  reportedUserName:{type:String},
+  reportDate:{type:Date},
+  reportReason:{type:String}
+})
+const ReportModel=mongoose.model('report',reportSchema)
+//Export Model
+exports.ReportModel=ReportModel
+
