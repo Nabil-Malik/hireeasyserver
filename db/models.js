@@ -41,6 +41,7 @@ const jobSchema=mongoose.Schema({
   content:{type:String,require:true},
   company:{type:String,require:true},
   position:{type:String,require:true},  
+  postCode:{type:String},  
   posterId:{type:mongoose.Schema.ObjectId,ref:'user' },
   postDate:{type:Date},
   expire:{type:String},
