@@ -4,14 +4,14 @@ Contains some Model modules that manipulate database collection data
 
 /*Connect to the database*/
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/hireeasy_db')
+mongoose.connect('mongodb+srv://HireEasyCloud:Password@hireeasy.cta9w.mongodb.net/hireeasy?retryWrites=true&w=majority')
 const conn = mongoose.connection
 conn.on('connected', () => {
   
   //if connect to local mongo db
-  console.log('db connect success to local mongodb!');
+  //console.log('db connect success to local mongodb!');
   //if connect to cloud mongo db
-  // console.log('db connect success to cloud mongodb!')
+  console.log('db connect success to cloud mongodb!')
 })
 
 
